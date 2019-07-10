@@ -8,17 +8,19 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.awt.event.ActionEvent;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 import java.awt.Window.Type;
+import javax.swing.JTextArea;
 
 public class gui {
 
 	private JFrame frmTwitchDonationGenerator;
 	private JTextField messageText;
-	private JTextField outputText;
 	private JTextField ammountText;
 
 	/**
@@ -96,6 +98,9 @@ public class gui {
 		rdbtnNorsk.setBounds(150, 129, 144, 23);
 		layeredPane.add(rdbtnNorsk);
 		
+		// Output text
+		JTextArea outputText = new JTextArea();
+		
 		JButton btnGenerate = new JButton("Generate");
 		btnGenerate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -110,7 +115,10 @@ public class gui {
 					text = "/me donerte kr " + ammountText.getText() + " med meldingen: " + text;
 				}
 				
-				outputText.setText(text);
+				DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+				LocalDateTime now = LocalDateTime.now();
+				
+				outputText.setText(outputText.getText() + dtf.format(now) + " Copied donation to clipboard.\n");
 				
 				/* Clipboard */
 				StringSelection stringSelection = new StringSelection(text);
@@ -121,13 +129,13 @@ public class gui {
 		btnGenerate.setBounds(50, 160, 340, 25);
 		layeredPane.add(btnGenerate);
 		
-		JLabel lblOutputwillBe = new JLabel("Output (will be copied to clipboard):");
-		lblOutputwillBe.setBounds(50, 230, 305, 15);
-		layeredPane.add(lblOutputwillBe);
+		JLabel lblOutputLog = new JLabel("Output log");
+		lblOutputLog.setBounds(50, 202, 128, 15);
+		layeredPane.add(lblOutputLog);
 		
-		outputText = new JTextField();
-		outputText.setBounds(50, 255, 340, 42);
+		//JTextArea outputText = new JTextArea();
+		outputText.setEditable(false);
+		outputText.setBounds(50, 229, 340, 78);
 		layeredPane.add(outputText);
-		outputText.setColumns(10);
 	}
 }
